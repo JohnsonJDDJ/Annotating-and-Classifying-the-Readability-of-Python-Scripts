@@ -11,6 +11,8 @@ import pickle
 Things to note:
 1): This crawler uses the clipboard, so don't copy stuff while this running, otherwise it will overwrite contents in the clipboard
 2): Don't minimize the window, otherwise selenium doesn't work correctly
+3): Github returns at most 1000 files, 10 files each page for 100 pages even though there can be millions of files that are avaible,
+Thus refreshing the page returns different files 
 
 """
 hashes = set()
