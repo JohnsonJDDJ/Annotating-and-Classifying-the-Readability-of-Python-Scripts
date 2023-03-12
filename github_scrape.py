@@ -8,7 +8,8 @@ Thus refreshing the page returns different files
 ====================================
 SETUP: Plese Define Global Variables
 """
-HASH_PATH = "./hash.pkl" # store data hashes; defaults to ./hash.pkl
+USER = "JD" # identify urself
+HASH_PATH = "./" + USER + "_hash.pkl" # store data hashes; defaults to ./hash.pkl
 DATA_PATH = "./data/" # place to store data; defaults to ./data/
 GITHUB_USER = "JohnsonJDDJ" # github username
 """
@@ -45,8 +46,8 @@ def save_file(index, filename):
     hashes.add(hash(content))
     #only choose the filename
     filename = filename.split("/")[-1]
-    filename = "{}-{}".format(index,filename)
-    file_path = os.path.join(DATA_PATH,filename)
+    filename = "{}{}-{}".format(USER, index, filename)
+    file_path = os.path.join(DATA_PATH, filename)
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(content)
     return True
@@ -115,7 +116,7 @@ try:
 
         #sleep here so it doesn't loop on the same page
         time.sleep(3)
-        
+
 except Exception as e:
     print(e)
     with open(HASH_PATH,"wb") as f:
