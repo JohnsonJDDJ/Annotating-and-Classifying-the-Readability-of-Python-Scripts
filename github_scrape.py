@@ -27,13 +27,14 @@ import pickle
 # Read Github Password from ./GITHUB_PASSWORD
 # You must have this file
 GITHUB_PASSWORD = None
-with open("./GITHUB_PASSWORD", "rb") as f:
-    GITHUB_PASSWORD = f.read()
+with open("./GITHUB_PASSWORD", "r") as f:
+    GITHUB_PASSWORD = str(f.read())
 if GITHUB_PASSWORD is None:
     raise AssertionError("Missing password in ./GITHUB_PASSWORD")
+print(GITHUB_PASSWORD)
 
 hashes = set()
-if os.path.exits(HASH_PATH):
+if os.path.exists(HASH_PATH):
     with open(HASH_PATH,"rb") as f:
         hashes = pickle.load(f)
 
@@ -58,6 +59,7 @@ try:
     options.add_argument('--enable-features=NetworkService')
     driver = webdriver.Chrome(service=service)
     driver.get("https://github.com/search?q=extension%3Apy+size%3A1800..2200&type=Code")
+
     #this will initiate a login process 
     wait = WebDriverWait(driver, 6)
     wait.until(EC.presence_of_element_located((By.ID, "login_field")))
@@ -68,10 +70,10 @@ try:
     driver.find_element(By.NAME, "commit").click()
     time.sleep(3)
 
-    #at this point we should arrive at the page where each file is being listed
-    scraped = len(hashes)
-    while scraped < 800:
-        print("scraped: {}".format(scraped))
+    # at this point we should arrive at the page where each file is being listed
+    while len(hashes) < 800:
+        print("scraped: {}".format(len(hashes)))
+
         while True:
             try:
                 wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "f4")))
@@ -83,7 +85,9 @@ try:
             except:
                 #there can be some problems loading the page, so try to refresh it a couple of times
                 driver.refresh()
+
         time.sleep(2.5)
+
         files = [i.find_element(By.XPATH,".//a").text for i in lst]
         for file in files:
             wait.until(EC.presence_of_element_located((By.LINK_TEXT,file)))
@@ -99,20 +103,21 @@ try:
             #and so this shit doesn't crash 
             time.sleep(0.5)
             #save the file here
-            val = save_file(scraped, file)
-            if not val:
-                scraped -= 1
+            val = save_file(len(hashes), file)
             driver.back()
             time.sleep(1)
-            scraped+=1 
+
         #hopefully by this point every file on this page has been stored 
         #we go to the next page
         next_page = driver.find_element(By.CSS_SELECTOR,"a[rel='next']")
         wait.until(EC.element_to_be_clickable(next_page))
         next_page.click()
+
         #sleep here so it doesn't loop on the same page
         time.sleep(3)
-except:
+        
+except Exception as e:
+    print(e)
     with open(HASH_PATH,"wb") as f:
         #overwrite the old one is fine since we are starting off with what was there 
         pickle.dump(hashes,f)
