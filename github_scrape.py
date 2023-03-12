@@ -1,3 +1,19 @@
+"""
+Things to note:
+1): This crawler uses the clipboard, so don't copy stuff while this running, otherwise it will overwrite contents in the clipboard
+2): Don't minimize the window, otherwise selenium doesn't work correctly
+3): Github returns at most 1000 files, 10 files each page for 100 pages even though there can be millions of files that are avaible,
+Thus refreshing the page returns different files 
+
+====================================
+SETUP: Plese Define Global Variables
+"""
+HASH_PATH = "./hash.pkl" # store data hashes; defaults to ./hash.pkl
+DATA_PATH = "./data/" # place to store data; defaults to ./data/
+GITHUB_USER = "JohnsonJDDJ" # github username
+"""
+====================================
+"""
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,20 +23,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time, os 
 import clipboard
 import pickle
-"""
-Things to note:
-1): This crawler uses the clipboard, so don't copy stuff while this running, otherwise it will overwrite contents in the clipboard
-2): Don't minimize the window, otherwise selenium doesn't work correctly
-3): Github returns at most 1000 files, 10 files each page for 100 pages even though there can be millions of files that are avaible,
-Thus refreshing the page returns different files 
 
-"""
+# Read Github Password from ./GITHUB_PASSWORD
+# You must have this file
+GITHUB_PASSWORD = None
+with open("./GITHUB_PASSWORD", "rb") as f:
+    GITHUB_PASSWORD = f.read()
+if GITHUB_PASSWORD is None:
+    raise AssertionError("Missing password in ./GITHUB_PASSWORD")
+
 hashes = set()
-HASH_PATH = "./hash.pkl"
 if os.path.exits(HASH_PATH):
     with open(HASH_PATH,"rb") as f:
         hashes = pickle.load(f)
-DATA_PATH = "---------------" #change this to your local directory to store the data 
+
 def save_file(index, filename):
     content = clipboard.paste()
     if hash(content) in hashes:
@@ -47,8 +63,8 @@ try:
     wait.until(EC.presence_of_element_located((By.ID, "login_field")))
     wait.until(EC.presence_of_element_located((By.ID, "password")))
     wait.until(EC.element_to_be_clickable((By.NAME, "commit")))
-    driver.find_element(By.ID, "login_field").send_keys("---------")#change this to your github username
-    driver.find_element(By.ID, "password").send_keys("---------") # change this to your github password
+    driver.find_element(By.ID, "login_field").send_keys(GITHUB_USER)
+    driver.find_element(By.ID, "password").send_keys(GITHUB_PASSWORD) # change this to your github password
     driver.find_element(By.NAME, "commit").click()
     time.sleep(3)
 
