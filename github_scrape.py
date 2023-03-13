@@ -10,7 +10,7 @@ SETUP: Plese Define Global Variables
 """
 USER = "JD" # identify urself
 HASH_PATH = "./" + USER + "_hash.pkl" # store data hashes; defaults to ./hash.pkl
-DATA_PATH = "./raw_data/" # place to store data; defaults to ./data/
+DATA_PATH = "./data/raw_data/" # place to store data; defaults to ./data/
 GITHUB_USER = "JohnsonJDDJ" # github username
 """
 ====================================
