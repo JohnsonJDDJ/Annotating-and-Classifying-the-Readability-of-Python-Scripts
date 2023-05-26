@@ -1,4 +1,4 @@
-# Annotating and Classifying the Readability of Python Files
+# Annotating and Classifying the Readability of Python Scripts
 
 Contributors: Zhihao Du, Zeyi Yan, Dong Bu
 
@@ -19,8 +19,8 @@ We have decided to classify the readibility of a python script file (file in `.p
 - Meta-info like file structure, paper references, API references, links to more detailed documentation, etc.
 - Coding style, including variable and function names, and whether they are explanatory of their functions.
 
-Please consult the guideline [here](/deliverables/guideline.pdf).
+Please refer to the annotation guideline [here](/deliverables/guidelines.pdf).
 
 ## Classification
 
-As Part 4 of the assignment, we set off to build models to approach the task that we have defined ourself. We used classifical logistic regression ([notebook](classification/LogReg.ipynb)) and BERT (notebook) to solve the task. Read more in our analysis here.
+As Part 4 of the assignment, we set off to build models to approach the task that we have defined ourself. We used classifical logistic regression ([notebook](classification/LogReg.ipynb)) and BERT ([notebook](classification/BERT.ipynb)) to solve the task. Read more in our analysis [here](classification/analysis.pdf).
